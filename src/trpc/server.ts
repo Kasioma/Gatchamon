@@ -32,7 +32,7 @@ export const api = createTRPCProxyClient<AppRouter>({
   transformer,
   links: [
     loggerLink({
-      enabled: (op) =>
+      enabled: op =>
         process.env.NODE_ENV === "development" ||
         (op.direction === "down" && op.result instanceof Error),
     }),
@@ -42,9 +42,9 @@ export const api = createTRPCProxyClient<AppRouter>({
      */
     () =>
       ({ op }) =>
-        observable((observer) => {
+        observable(observer => {
           createContext()
-            .then((ctx) => {
+            .then(ctx => {
               return callProcedure({
                 procedures: appRouter._def.procedures,
                 path: op.path,
@@ -53,7 +53,7 @@ export const api = createTRPCProxyClient<AppRouter>({
                 type: op.type,
               });
             })
-            .then((data) => {
+            .then(data => {
               observer.next({ result: { data } });
               observer.complete();
             })

@@ -21,7 +21,7 @@ export function TRPCReactProvider(props: {
       transformer,
       links: [
         loggerLink({
-          enabled: (op) =>
+          enabled: op =>
             process.env.NODE_ENV === "development" ||
             (op.direction === "down" && op.result instanceof Error),
         }),
@@ -35,12 +35,15 @@ export function TRPCReactProvider(props: {
           },
         }),
       ],
-    })
+    }),
   );
 
   return (
     <QueryClientProvider client={queryClient}>
-      <api.Provider client={trpcClient} queryClient={queryClient}>
+      <api.Provider
+        client={trpcClient}
+        queryClient={queryClient}
+      >
         {props.children}
       </api.Provider>
     </QueryClientProvider>
